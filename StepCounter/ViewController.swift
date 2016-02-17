@@ -17,6 +17,8 @@ class ViewController: UIViewController {
     @IBOutlet weak var stepsLabel: UILabel!
     @IBOutlet weak var playerSprite: UIImageView!
     @IBOutlet weak var mapView: UIView!
+    
+    var items: [item]!
 
     // For testing purposes only
     
@@ -169,6 +171,24 @@ class ViewController: UIViewController {
         }
         
         
+        //for testing items
+        
+        let i1 = item(name: "testing1", description:  "testing1", picture: UIImage(named: "shield")!, xPos: 102, yPos: 103)
+        let i2 = item(name: "testing2", description:  "testing2", picture: UIImage(named: "shield")!, xPos: 202, yPos: 203)
+        
+        items = [i1, i2]
+        
+        for item in items{
+            print("item")
+            if(!item.found){
+                let itemView = UIImageView(image: item.picture)
+                itemView.frame = CGRect(x: item.xPos, y: item.yPos, width: 10, height: 10)
+            
+                item.itemView = itemView
+                view.addSubview(itemView)
+            }
+        }
+        
     }
 
     
@@ -181,11 +201,30 @@ class ViewController: UIViewController {
             self.defaults.setInteger(self.stepsUsed, forKey: "stepsUsed")
             self.stepsRemaining = self.stepsTaken - self.stepsUsed
             self.stepsLabel.text = "\(self.stepsRemaining)"
+            
+            let playerLocX = (playerLocation.frame.origin.x)
+            let playerLocY = (playerLocation.frame.origin.y)
+            for item in items{
+                let itemPosX = item.itemView.frame.origin.x
+                let itemPosY = item.itemView.frame.origin.y
+                print("item")
+                print(itemPosX)
+                print("player")
+                print(playerLocX)
+                if(itemPosX==playerLocX){
+                    if(itemPosY==playerLocY){
+                        item.found = true
+                        item.itemView.removeFromSuperview()
+                    }
+                }
+            }
+            
             return true
         }
         else {
             return false
         }
+        
         
     }
     
@@ -216,6 +255,10 @@ class ViewController: UIViewController {
         newMapView.backgroundColor = UIColor(red: 101/255, green: 247/255, blue: 159/255, alpha: 1.0)
         self.view.insertSubview(newMapView, atIndex: 0)
         ++squaresMoved
+        
+        
+        
+        
     }
     
     
@@ -223,6 +266,8 @@ class ViewController: UIViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
+    
 
 
 }
